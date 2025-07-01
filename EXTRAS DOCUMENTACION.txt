@@ -1,0 +1,1 @@
+"required": ["nombre", "apellido", "identificacion", "sexo", "contrasenia", "email", "direccion", "rol"],

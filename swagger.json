@@ -1,0 +1,597 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API de Gestión de correas",
+    "description": "API para registrar, listar, buscar, editar y eliminar aprendices.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://10.2.125.166:5000/"
+    }
+  ],
+  "tags":[
+    {
+    "name": "Usuarios",
+    "description": "Todo sobre la gestión de usuarios"
+    },
+    {
+    "name": "reporte",
+    "description": "Todo sobre la gestión de reportes"
+    },
+    {
+    "name": "catalogo",
+    "description": "Todo sobre la gestión de catalogos"
+    }
+  ],
+  "paths": {
+    "/usuarios/": {
+      "post": {
+        "tags":["Usuarios"],
+        "summary": "Registrar un nuevo usuario",
+        "description": "Este endpoint permite registrar un nuevo usuario en el sistema. Requiere enviar un objeto JSON con los datos del usuario como nombre, apellido, identificacion, sexo, contraseña, email, direccion y rol.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["nombre", "apellido", "sexo", "email", "direccion", "rol", "identificacion", "contrasenia"],
+                "properties": {
+                  "nombre": { "type": "string" },
+                  "apellido": { "type": "string" },
+                  "sexo": { "type": "string" },
+                  "email": { "type": "string" },
+                  "direccion": { "type": "string" },
+                  "rol": { "type": "string" },
+                  "identificacion": { "type": "string" },
+                  "contrasenia": { "type": "string" }
+                },
+                "example": {
+                  "id":"2",
+                  "nombre": "Jessica",
+                  "apellido": "Orozco",
+                  "identificacion": "123124",
+                  "sexo": "F",
+                  "email": "Jessica@example.com",
+                  "direccion": "Calle 12-12",
+                  "contrasenia": "maisena123"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Devuelve un mensaje de confirmación indicando que el usuario fue registrado correctamente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Usuario Registrado"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "mensaje Error al registrar Usuario:"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags":["Usuarios"],
+        "summary": "Listar todos los usuarios",
+        "description":"Este endpoint permite obtener un listado completo de los usuarios registrados en el sistema. La respuesta incluye información básica como nombre, apellido, identificacion, sexo, contraseña, email, direccion y rol.}",
+        "responses": {
+          "200": {
+            "description": "Respuesta exitosa que contiene la lista de usuarios.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "nombre": { "type": "string" },
+                      "apellido": { "type": "string" },
+                      "sexo": { "type": "string" },
+                      "email": { "type": "string" },
+                      "identificacion": { "type": "string" },
+                      "rol": { "type": "string" },
+                      "contrasenia": { "type": "string" }
+                    },
+                    "example":
+                      {
+                        "usu_nombre": "Jessica",
+                        "usu_apellido": "Orozco",
+                        "usu_identificacion": "123124",
+                        "usu_sexo": "F",
+                        "usu_email": "Jessica@example.com",
+                        "usu_direccion": "Calle 12-12",
+                        "usu_contraseña": "maisena123",
+                        "usu_rol":"Administrador"
+                      }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/usuarios/{id}":{
+      "delete": {
+        "tags": ["Usuarios"],
+        "summary": "Eliminar un usuario por ID",
+        "description": "Este endpoint permite eliminar un usuario del sistema utilizando su identificador único (ID). Si el ID proporcionado es válido y corresponde a un usuario existente, se eliminará de forma permanente.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Devuelve un mensaje de confirmación indicando que el usuario fue eliminado correctamente del sistema.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": {
+                      "type": "string"
+                    }
+                  },
+                  "example": {
+                    "mensaje": "Usuario Eliminado"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags":["Usuarios"],
+        "summary": "Editar un usuario existente",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string",
+                        "format":"uuid" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["nombre", "apellido", "sexo", "email","direccion", "identificacion", "rol", "contrasenia" ],
+                "properties": {
+                  "nombre": { "type": "string" },
+                  "apellido": { "type": "string" },
+                  "sexo": { "type": "string" },
+                  "email": { "type": "string" },
+                  "direccion": { "type": "string" },
+                  "identificacion": { "type": "string" },
+                  "rol": { "type": "string" },
+                  "contrasenia": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "usuario editado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reporte/":{
+      "post": {
+        "tags":["reporte"],
+        "summary": "Registrar un nuevo reporte",
+        "description": "Este endpoint es para registrar un reporte en el sistema. Se  deben enviar los datos requeridos en el cuerpo de solicitud en formato JSON.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["gananciaTotal", "pago", "materialUsado", "cantidadVentas", "idA" ],
+                "properties": {
+                  "gananciaTotal": { "type": "string" },
+                  "pago": { "type": "string" },
+                  "materialUsado": { "type": "string" },
+                  "cantidadVentas": { "type": "string" },
+                  "idA": { "type": "string" }
+                },
+                "example": {
+                  "gananciaTotal": "10000",
+                  "pago": "1800000000",
+                  "materialUsado": "15 M, Hebilla plateada, y 10 M Hilo",
+                  "cantidadVentas": "99 correas",
+                  "idA": "9"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Devuelve un mensaje de confirmación indicando que el reporte fue registrado correctamente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Reporte Registrado"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "mensaje: Error al registrar reporte:"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags":["reporte"],
+        "summary": "Listar todos los Reportes",
+        "description":"Este endpoint nos devuelve una lista de los reportes registrados en el sistema. Devolverá la solicitud de consulta en  formato JSON .}",
+        "responses": {
+          "200": {
+            "description": "Respuesta exitosa que contiene la lista de reportes.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "gananciaTotal": { "type": "string" },
+                      "pago": { "type": "string" },
+                      "materialUsado": { "type": "string" },
+                      "cantidadVentas": { "type": "string" },
+                      "idA": { "type": "string" }
+                    },
+                    "example": 
+                      {
+                        "rep_gananciaTotal": "Jessica",
+                        "rep_pago": "Orozco",
+                        "rep_materialUsado": "123124",
+                        "rep_cantidadVentas": "F",
+                        "rep_idA": "Jessica@example.com"
+                      }                      
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    
+    "/reporte/{id}":{
+      "delete": {
+        "tags":["reporte"],
+        "summary": "Eliminar un reporte por ID",
+        "description":"Este endpoint es para eliminar un reporte del sistema por su id único.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string",
+                        "format": "uuid"}
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Devuelve un mensaje de confirmación indicando que el usuario fue eliminado correctamente del sistema.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Reporte Eliminado"
+                  }
+                }
+              }
+            }
+          }
+        }
+        },
+      "put": {
+        "tags":["reporte"],
+        "summary": "Editar un reporte existente",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["gananciaTotal", "pago", "materialUsado", "cantidadVentas", "idA"],
+                "properties": {
+                  "gananciaTotal": { "type": "string" },
+                  "pago": { "type": "string" },
+                  "materialUsado": { "type": "string" },
+                  "cantidadVentas": { "type": "string" },
+                  "idA": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "usuario editado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+        }
+    },
+    "/catalogo/":{
+      "post": {
+        "tags":["catalogo"],
+        "summary": "Registrar un nuevo catalogo",
+        "description": "Este endpoint es para registrar catálogos en el sistema. Se  deben enviar los datos requeridos en el cuerpo de solicitud en formato JSON.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["colores", "hebilla", "materialCinturon", "talla", "idR" ],
+                "properties": {
+                  "colores": { "type": "string" },
+                  "hebilla": { "type": "string" },
+                  "materialCinturon": { "type": "string" },
+                  "talla": { "type": "string" },
+                  "idR": { "type": "string" }
+                },
+                "example": {
+                  "colores": "rojo",
+                  "hebilla": "negra",
+                  "materialCinturon": "cuero",
+                  "talla": "36",
+                  "idR": ""
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Devuelve un mensaje de confirmación indicando que el catalogo fue registrado correctamente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Catalogo Registrado"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "mensaje: Error al registrar reporte:"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags":["catalogo"],
+        "summary": "Listar todos los catalogos",
+        "description":"Este endpoint es para devolver una lista de los catálogos registrados en el sistema. Devolverá la solicitud de consulta en  formato JSON .}",
+        "responses": {
+          "200": {
+            "description": "Respuesta exitosa que contiene la lista de catalogo.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "colores": { "type": "string" },
+                      "hebilla": { "type": "string" },
+                      "materialUsado": { "type": "string" },
+                      "materialCinturon": { "type": "string" },
+                      "idR": { "type": "string" }
+                    },
+                    "example":
+                      {
+                        "cat_colores": "rojo",
+                        "cat_hebilla": "negra",
+                        "cat_materialCinturon": "cuero",
+                        "cat_talla": "36",
+                        "cat_id": "9"
+                      }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/catalogo/{id}":{
+      "delete": {
+        "tags":["catalogo"],
+        "summary": "Eliminar un catalogo por ID",
+        "description":"Este endpoint es para eliminar un catalogo del sistema por su id único.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Devuelve un mensaje de confirmación indicando que el usuario fue eliminado correctamente del sistema.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  },
+                  "example": {
+                    "mensaje": "Catalogo Eliminado"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+       "put": {
+        "tags":["catalogo"],
+        "summary": "Editar un catalogo existente",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["colores", "hebilla", "materialCinturon", "talla", "idR"],
+                "properties": {
+                  "colores": { "type": "string" },
+                  "hebilla": { "type": "string" },
+                  "materialCinturon": { "type": "string" },
+                  "cantidadVentas": { "type": "string" },
+                  "idR": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "catalogo editado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "mensaje": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
