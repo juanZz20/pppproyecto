@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "http://10.2.125.166:5000/"
+      "url": "https://pppproyecto.onrender.com"
     }
   ],
   "tags":[
